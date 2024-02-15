@@ -27,6 +27,9 @@ archives:
     format_overrides:
       - goos: windows
         format: zip
+    files:
+      - README.md
+      - config.yaml
 
 changelog:
   sort: asc
