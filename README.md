@@ -13,7 +13,7 @@ Image here
 
 ## About
 
-ScrumChrono is a terminal UI to aid Scrum meetings. The goal of this project is to make easy to track time and provide statistics.
+ScrumChrono is a terminal UI to aid Scrum meetings. The goal of this project is to make easy to track time and provide some extra information.
 Feel free to open an issue with any bug you encounter of any suggestion.
 
 ## Features
@@ -21,8 +21,8 @@ Feel free to open an issue with any bug you encounter of any suggestion.
 * Config your teams by members, time and font.
 * Countdown will change color when 33%, 66% and 100% of time has elapsed.
 * Pause
-* Statistics
-* Soon: Atlassian Integration
+* Atlassian Integration
+* Soon: Statistics
 
 ## Installation
 
