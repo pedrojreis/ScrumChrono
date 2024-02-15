@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"ScrumChrono/core"
-	"ScrumChrono/core/data"
 	"ScrumChrono/core/jira"
 	"fmt"
 	"log"
@@ -176,7 +175,6 @@ func startCountdown() {
 			e := <-events
 			switch e.ID {
 			case "q", "<C-c>":
-				SaveData(timers)
 				termui.Close()
 				quit <- struct{}{}
 				return
@@ -208,12 +206,15 @@ func startCountdown() {
 				updateGrid()
 				termui.Render(grid)
 			}
+			for i, f := range focus {
+				if i == currentFocus {
+					f.TitleStyle = termui.NewStyle(termui.Color(termui.ModifierBold))
+				} else {
+					f.TitleStyle = termui.NewStyle(termui.ColorWhite)
+				}
+			}
 		}
 	}()
 
 	<-quit
-}
-
-func SaveData(timers map[string]time.Duration) {
-	data.SaveMeeting(timers)
 }
