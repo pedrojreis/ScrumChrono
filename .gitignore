@@ -29,3 +29,7 @@ Thumbs.db
 
 # Go generated files
 ScrumChrono
+scrumchrono.db
+
+# Program generated files
+.data/**/*
