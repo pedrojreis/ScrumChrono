@@ -34,3 +34,14 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+brews:
+  - repository:
+        owner: pedrojreis
+        name: ScrumChrono
+    name: ScrumChrono
+    folder: Formula
+    homepage: https://github.com/pedrojreis/ScrumChrono
+    description: ScrumChrono is a terminal UI to aid Scrum meetings.
+    test: |
+      system "ScrumChrono --version"
