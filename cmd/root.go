@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"ScrumChrono/core"
-	"ScrumChrono/data"
+	"ScrumChrono/core/data"
+	"ScrumChrono/core/jira"
 	"fmt"
 	"log"
 	"strings"
@@ -52,6 +53,11 @@ func startCountdown() {
 		return
 	}
 
+	// data.InitDB(viper.GetStringSlice("Teams." + team + ".Members"))
+
+	stringTitle := make(chan string)
+	go jira.GetIssuesForSprint(team, stringTitle)
+
 	// Init our List with names
 	names := core.RandomizeOrder(viper.GetStringSlice("Teams." + team + ".Members"))
 	list := widgets.NewList()
@@ -65,12 +71,16 @@ func startCountdown() {
 	countdown.TextStyle = termui.NewStyle(termui.ColorBlue)
 	countdown.Title = "[ Countdown ]"
 
-	// Init our Statistics
-	statistics := widgets.NewPlot()
-	statistics.Title = "[ Statistics ]"
-	statistics.DrawDirection = widgets.DrawLeft
-	statistics.Marker = widgets.MarkerBraille
-	statistics.PlotType = widgets.ScatterPlot
+	// Init our sprintInfo
+	sprintInfo := widgets.NewList()
+	sprintInfo.Title = "[ " + <-stringTitle + " ]"
+	sprintInfo.Rows = jira.GetIssuesForSprintByUser(list.Rows[list.SelectedRow])
+	sprintInfo.SelectedRowStyle = termui.NewStyle(termui.ColorGreen)
+	sprintInfo.WrapText = false
+
+	//focusable stuff
+	focus := []*widgets.List{list, sprintInfo}
+	currentFocus := 0
 
 	grid := termui.NewGrid()
 
@@ -89,7 +99,7 @@ func startCountdown() {
 
 			//Set Grid
 			grid.Set(
-				termui.NewCol(2.0/3.0, termui.NewRow(2.0/3.0, countdown), termui.NewRow(1.0/3.0, statistics)),
+				termui.NewCol(2.0/3.0, termui.NewRow(2.0/3.0, countdown), termui.NewRow(1.0/3.0, sprintInfo)),
 				termui.NewCol(1.0/3.0, termui.NewRow(1.0, list)),
 			)
 		} else {
@@ -105,7 +115,7 @@ func startCountdown() {
 				termui.NewCol(1.0,
 					termui.NewRow(1.0/3.0, countdown),
 					termui.NewRow(1.0/3.0, list),
-					termui.NewRow(1.0/3.0, statistics),
+					termui.NewRow(1.0/3.0, sprintInfo),
 				))
 		}
 	}
@@ -170,10 +180,28 @@ func startCountdown() {
 				termui.Close()
 				quit <- struct{}{}
 				return
+			case "<Left>":
+				currentFocus = (currentFocus + 1) % len(focus)
+			case "<Right>":
+				currentFocus = (currentFocus - 1 + len(focus)) % len(focus)
 			case "<Up>":
-				list.ScrollUp()
+				if len(focus[currentFocus].Rows) > 0 && focus[currentFocus].SelectedRow == 0 {
+					focus[currentFocus].SelectedRow = len(focus[currentFocus].Rows) - 1
+				} else {
+					focus[currentFocus].ScrollUp()
+				}
+
+				sprintInfo.Rows = jira.GetIssuesForSprintByUser(list.Rows[list.SelectedRow])
 			case "<Down>":
-				list.ScrollDown()
+				if len(focus[currentFocus].Rows) > 0 {
+					if focus[currentFocus].SelectedRow == len(focus[currentFocus].Rows)-1 {
+						focus[currentFocus].SelectedRow = 0
+					} else {
+						focus[currentFocus].ScrollDown()
+					}
+				}
+
+				sprintInfo.Rows = jira.GetIssuesForSprintByUser(list.Rows[list.SelectedRow])
 			case "<Space>":
 				isPaused = !isPaused
 			case "<Resize>":
@@ -187,5 +215,5 @@ func startCountdown() {
 }
 
 func SaveData(timers map[string]time.Duration) {
-	data.WriteYamlFile(timers)
+	data.SaveMeeting(timers)
 }
