@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/common-nighthawk/go-figure"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +15,10 @@ func versionCmd() *cobra.Command {
 		Short: "Print version/build info",
 		Long:  "Print version/build information",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Current Version is:", Version)
+			d := color.New(color.FgHiBlue)
+			d.Print(figure.NewFigure("Scrum Chrono", "speed", true).String())
+			d.Println()
+			d.Println("Version ", Version)
 		},
 	}
 
