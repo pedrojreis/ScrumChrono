@@ -1,0 +1,23 @@
+Jira:
+  url: "https://my-company.atlassian.net/"
+  username: "@my-company.py"
+  token: "ThisIsAToken"
+Teams:
+  FirstTeamName:
+    BoardID: 1
+    MaxTime: 180 # seconds
+    Font: "doom" # http://www.figlet.org/fontdb.cgi
+    Members:
+      - "Zagreus"
+      - "Link"
+      - "Arthur"
+      - "GLaDOS"
+  SecondTeamName:
+    MaxTime: 180 # seconds
+    Font: "doom" # http://www.figlet.org/fontdb.cgi
+    Members:
+      - "Trevor Philips"
+      - "Michael De Santa"
+      - "Franklin Clinton"
+      - "Lamar Davis"
+      - "Lester Crest"
