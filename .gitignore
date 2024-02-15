@@ -33,3 +33,4 @@ scrumchrono.db
 
 # Program generated files
 .data/**/*
+dist/
