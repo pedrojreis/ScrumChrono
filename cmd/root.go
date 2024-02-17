@@ -37,7 +37,7 @@ func init() {
 
 	rootCmd.AddCommand(versionCmd(), configCmd())
 	rootCmd.Flags().StringVarP(&team, "team", "t", "", "Team name")
-	rootCmd.MarkFlagRequired("team")
+	_ = rootCmd.MarkFlagRequired("team")
 
 }
 
