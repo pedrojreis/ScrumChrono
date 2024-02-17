@@ -1,0 +1,22 @@
+#Any change done to github folder
+github:
+- all:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**/*'
+
+# Add 'Documentation' label to any change to .md files within the entire repository 
+Documentation:
+- changed-files:
+  - any-glob-to-any-file: '**/*.md'
+
+# Any change in the core folder
+core:
+- all:
+  - changed-files:
+    - any-glob-to-any-file: 'core/**/*'
+
+# Any changes done in cmd folder
+cmd:
+- all:
+  - changed-files:
+    - any-glob-to-any-file: 'cmd/**/*'
