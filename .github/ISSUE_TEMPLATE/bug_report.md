@@ -1,34 +1,65 @@
----
 name: Bug report 🐛
-about: Create a report to help us improve
-title: ''
+description: Create a report to help us improve
+title: '🐛 '
 labels: 'bug'
 assignees: ''
+body:
+    - type: textarea
+        validations:
+        required: true
+        attributes:
+        label: Describe the bug
+        description: >-
+            A clear and concise description of what the bug is.
 
----
+    - type: textarea
+        validations:
+        required: true
+        attributes:
+        label: To Reproduce
+        placeholder: >-
+                1. Go to '...'
+                2. Click on '....'
+                3. Scroll down to '....'
+                4. See error
+        description: >-
+            Steps to reproduce the behavior.
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+    - type: input
+        id: scrumchrono_version
+        validations:
+            required: true
+        attributes:
+        label: What ScrumChrono version are you using
+        description: >
+            [e.g. 0.1]
 
-**To Reproduce**
-Steps to reproduce the behavior:
+    - type: textarea
+        validations:
+        required: false
+        attributes:
+        label: Expected behavior
+        description: >-
+            A clear and concise description of what you expected to happen.
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+    - type: input
+        id: os
+        attributes:
+        label: What OS and version are you using
+        description: >
+            [e.g. macOS Sonoma, Windows 11, Ubuntu 23.10]
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+    - type: input
+        id: terminal
+        attributes:
+        label: What terminal are you using
+        description: >
+            [e.g. PowerShell, Windows Terminal, iTerm, Warp]
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
-
-- OS: [e.g. iOS]
-- Terminal [e.g. iTerm2, Warp]
-- Version [e.g. 3.4]
-
-**Additional context**
-Add any other context about the problem here.
+    - type: textarea
+        validations:
+        required: false
+        attributes:
+        label: Additional context
+        description: >-
+            Add any other context about the problem here.

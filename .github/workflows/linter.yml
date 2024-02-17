@@ -1,8 +1,12 @@
-name: golangci-lint
+name: golangci-lint 🕵️‍♂️
 on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
+
+concurrency:
+  group: labels-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -21,7 +25,7 @@ jobs:
           go-version: "1.21"
           cache: false
 
-      - name: golangci-lint
+      - name: golangci-lint 🕵️‍♂️
         uses: golangci/golangci-lint-action@3cfe3a4abbb849e10058ce4af15d205b6da42804 # v4.0.0
         with:
           # Require: The version of golangci-lint to use.
