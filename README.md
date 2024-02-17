@@ -1,6 +1,6 @@
 <div align="center">
 
-Image here
+![ScrumChrono](./assets/example.gif)
 
 # ScrumChrono
 
@@ -16,6 +16,8 @@ Image here
 ScrumChrono is a terminal UI to aid Scrum meetings. The goal of this project is to make easy to track time and provide some extra information.
 Feel free to open an issue with any bug you encounter of any suggestion.
 
+As of now this is available to install via [brew](https://github.com/pedrojreis/homebrew-ScrumChrono).
+
 ## Features
 
 * Config your teams by members, time and font.
@@ -24,9 +26,9 @@ Feel free to open an issue with any bug you encounter of any suggestion.
 * Atlassian Integration
 * Soon: Statistics
 
-## Installation
-
-Soon ™
+<p align="center">
+  <img width="420" height="640" src="./assets/jira_example.png">
+</p>
 
 ## Built With
 
