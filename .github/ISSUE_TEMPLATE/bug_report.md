@@ -1,65 +1,60 @@
-name: "Bug report"
-description: Create a report to help us improve
-title: '🐛 '
-labels: 'bug'
-assignees: ''
+name: 🐞 Bug
+description: File a bug/issue
+title: "🐞 <title>"
+labels: ["bug"]
 body:
-- type: textarea
-  validations:
-    required: true
-  attributes:
-    label: Describe the bug
-    description: >-
-        A clear and concise description of what the bug is.
 
-- type: textarea
-  validations:
-    required: true
+- type: checkboxes
   attributes:
-    label: To Reproduce
-    placeholder: >-
-        1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See error
-    description: >-
-        Steps to reproduce the behavior.
-
-- type: input
-  id: scrumchrono_version
-  validations:
-    required: true
-  attributes:
-    label: What ScrumChrono version are you using
-    description: >
-        [e.g. 0.1]
-
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists for the bug you encountered.
+    options:
+  - label: I have searched the existing issues
+      required: true
 - type: textarea
+  attributes:
+    label: Current Behavior
+    description: A concise description of what you're experiencing.
   validations:
     required: false
-  attributes:
-    label: Expected behavior
-    description: >-
-        A clear and concise description of what you expected to happen.
-
-- type: input
-  id: os
-  attributes:
-    label: What OS and version are you using
-  description: >
-        [e.g. macOS Sonoma, Windows 11, Ubuntu 23.10]
-
-- type: input
-  id: terminal
-  attributes:
-    label: What terminal are you using
-    description: >
-        [e.g. PowerShell, Windows Terminal, iTerm, Warp]
-
 - type: textarea
+  attributes:
+    label: Expected Behavior
+    description: A concise description of what you expected to happen.
   validations:
     required: false
+- type: textarea
   attributes:
-    label: Additional context
-    description: >-
-        Add any other context about the problem here.
+    label: Steps To Reproduce
+    description: Steps to reproduce the behavior.
+    placeholder: |
+      1. In this environment...
+      1. With this config...
+      1. Run '...'
+      1. See error...
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Environment
+    description: |
+      examples:
+        - **OS**: Ubuntu 20.04
+        - **Terminal**: iTerm
+        - **ScrumChrono**: 0.1.0
+    value: |
+        - OS:
+        - Terminal:
+        - scrumchrono:
+    render: markdown
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: |
+      Links? References? Anything that will give us more context about the issue you are encountering!
+
+      Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+  validations:
+    required: false
