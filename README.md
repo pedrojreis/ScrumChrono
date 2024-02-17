@@ -1,6 +1,6 @@
 <div align="center">
 
-Image here
+![ScrumChrono](./assets/example.gif)
 
 # ScrumChrono
 
@@ -24,6 +24,9 @@ Feel free to open an issue with any bug you encounter of any suggestion.
 * Atlassian Integration
 * Soon: Statistics
 
+<p align="center">
+<img width="420" height="640" src="./assets/jira_example.png">
+</p>
 ## Installation
 
 Soon ™
