@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: labels-${{ github.ref }}
+  group: golangci-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
