@@ -5,17 +5,17 @@ labels: 'bug'
 assignees: ''
 body:
 - type: textarea
-    validations:
+  validations:
     required: true
-    attributes:
+  attributes:
     label: Describe the bug
     description: >-
         A clear and concise description of what the bug is.
 
 - type: textarea
-    validations:
+  validations:
     required: true
-    attributes:
+  attributes:
     label: To Reproduce
     placeholder: >-
         1. Go to '...'
@@ -26,40 +26,40 @@ body:
         Steps to reproduce the behavior.
 
 - type: input
-    id: scrumchrono_version
-    validations:
+  id: scrumchrono_version
+  validations:
     required: true
-    attributes:
+  attributes:
     label: What ScrumChrono version are you using
     description: >
         [e.g. 0.1]
 
 - type: textarea
-    validations:
+  validations:
     required: false
-    attributes:
+  attributes:
     label: Expected behavior
     description: >-
         A clear and concise description of what you expected to happen.
 
 - type: input
-    id: os
-    attributes:
+  id: os
+  attributes:
     label: What OS and version are you using
-    description: >
+  description: >
         [e.g. macOS Sonoma, Windows 11, Ubuntu 23.10]
 
 - type: input
-    id: terminal
-    attributes:
+  id: terminal
+  attributes:
     label: What terminal are you using
     description: >
         [e.g. PowerShell, Windows Terminal, iTerm, Warp]
 
 - type: textarea
-    validations:
+  validations:
     required: false
-    attributes:
+  attributes:
     label: Additional context
     description: >-
         Add any other context about the problem here.
