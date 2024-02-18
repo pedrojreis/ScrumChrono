@@ -56,10 +56,8 @@ winget:
     license: Apache-2.0
     homepage: https://github.com/pedrojreis/ScrumChrono
     repository:
-      owner: pedrojreis
-      name: ScrumChrono
       pull_request:
-        enabled: true
+        enabled: false
         draft: true
         base:
           owner: microsoft
