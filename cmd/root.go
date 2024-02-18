@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"ScrumChrono/core"
-	"ScrumChrono/core/jira"
 	"fmt"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/pedrojreis/ScrumChrono/core"
+	"github.com/pedrojreis/ScrumChrono/core/jira"
 
 	"github.com/common-nighthawk/go-figure"
 	"github.com/gizak/termui/v3"
