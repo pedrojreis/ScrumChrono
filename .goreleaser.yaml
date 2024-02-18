@@ -48,3 +48,25 @@ brews:
     description: ScrumChrono is a terminal UI to aid Scrum meetings.
     test: |
       system "ScrumChrono --version"
+
+winget:
+  - name: scrumchrono
+    publisher: pedrojreis
+    short_description: ScrumChrono is a terminal UI to aid Scrum meetings.
+    license: Apache-2.0
+    homepage: https://github.com/pedrojreis/ScrumChrono
+    repository:
+      owner: pedrojreis
+      name: ScrumChrono
+      pull_request:
+        enabled: true
+        draft: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
+    tags:
+      - Scrum
+      - Terminal
+
+    
