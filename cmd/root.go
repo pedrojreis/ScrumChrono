@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	Version, ShortCommit, CommitDate string
+	version, commit, date string
 
 	rootCmd = &cobra.Command{
 		Use:   "ScrumChrono",
