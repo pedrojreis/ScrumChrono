@@ -1,4 +1,4 @@
-module ScrumChrono
+module github.com/pedrojreis/ScrumChrono
 
 go 1.21.7
 

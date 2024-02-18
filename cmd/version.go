@@ -6,8 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const Version = "0.1.2"
-
 func versionCmd() *cobra.Command {
 
 	command := cobra.Command{
@@ -19,6 +17,8 @@ func versionCmd() *cobra.Command {
 			d.Print(figure.NewFigure("Scrum Chrono", "speed", true).String())
 			d.Println()
 			d.Println("Version ", Version)
+			d.Println("Commit ", Commit)
+			d.Println("Date ", Date)
 		},
 	}
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ScrumChrono/cmd"
+	"github.com/pedrojreis/ScrumChrono/cmd"
 )
 
 func main() {

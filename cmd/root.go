@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"ScrumChrono/core"
-	"ScrumChrono/core/jira"
 	"fmt"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/pedrojreis/ScrumChrono/core"
+	"github.com/pedrojreis/ScrumChrono/core/jira"
 
 	"github.com/common-nighthawk/go-figure"
 	"github.com/gizak/termui/v3"
@@ -16,6 +17,10 @@ import (
 )
 
 var (
+	Version string = "dev"
+	Commit  string
+	Date    string
+
 	rootCmd = &cobra.Command{
 		Use:   "ScrumChrono",
 		Short: "ScrumChrono is a simple CLI tool to manage the time of each member of a team during a Scrum meeting.",
