@@ -4,7 +4,7 @@
 
 # ScrumChrono
 
-  <a href="#about">About</a> •
+  • <a href="#about">About</a> •
   <a href="#features">Features</a> •
   <a href="#built-with">Built With</a> •
 </div>
