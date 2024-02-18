@@ -41,7 +41,7 @@ changelog:
 brews:
   - repository:
         owner: pedrojreis
-        name: homebrew-ScrumChrono
+        name: homebrew-tap
     name: ScrumChrono
     folder: Formula
     homepage: https://github.com/pedrojreis/ScrumChrono
