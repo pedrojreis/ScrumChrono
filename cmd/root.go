@@ -16,6 +16,8 @@ import (
 )
 
 var (
+	Version, ShortCommit, CommitDate string
+
 	rootCmd = &cobra.Command{
 		Use:   "ScrumChrono",
 		Short: "ScrumChrono is a simple CLI tool to manage the time of each member of a team during a Scrum meeting.",

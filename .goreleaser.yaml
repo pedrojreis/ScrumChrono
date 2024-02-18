@@ -1,4 +1,4 @@
-version: 1
+project_name: ScrumChrono
 
 before:
   hooks:
@@ -6,12 +6,21 @@ before:
     - go mod download
     - go generate ./...
 
+env:
+  - CGO_ENABLED=0
+
 builds:
   - env:
       - CGO_ENABLED=0
     main: ./main.go
-
-    binary: ScrumChrono
+    goos:
+      - linux
+      - windows
+      - darwin
+    ldflags:
+          - -s -w -X main.version={{.Version}}
+          - -s -w -X main.commit={{.ShortCommit}}
+          - -s -w -X main.Date={{.CommitDate}}
 
 archives:
   - format: tar.gz
@@ -70,4 +79,5 @@ winget:
       - Scrum
       - Terminal
 
-    
+snapshot:
+  name_template: "{{ .Tag }}-next"
