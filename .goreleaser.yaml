@@ -38,6 +38,9 @@ archives:
       - README.md
       - config.yaml
 
+signs:
+  - artifacts: all
+
 changelog:
   sort: asc
   filters:
