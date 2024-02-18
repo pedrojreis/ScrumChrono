@@ -16,9 +16,9 @@ func versionCmd() *cobra.Command {
 			d := color.New(color.FgHiBlue)
 			d.Print(figure.NewFigure("Scrum Chrono", "speed", true).String())
 			d.Println()
-			d.Println("Version ", version)
-			d.Println("Commit ", commit)
-			d.Println("Date ", date)
+			d.Println("Version ", Version)
+			d.Println("Commit ", Commit)
+			d.Println("Date ", Date)
 		},
 	}
 
