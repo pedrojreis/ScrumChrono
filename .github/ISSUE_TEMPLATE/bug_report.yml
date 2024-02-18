@@ -2,6 +2,7 @@ name: 🐞 Bug
 description: File a bug/issue
 title: "🐞 <title>"
 labels: ["bug"]
+assignees: "pedrojreis"
 body:
 
 - type: checkboxes
