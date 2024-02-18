@@ -37,4 +37,5 @@ As of now this is available to install via [brew](https://github.com/pedrojreis/
     * [Viper](https://github.com/spf13/viper) - configuration solution
     * [Termui](https://github.com/gizak/termui) - terminal dashboard and widget library
     * [Go-Figure](https://github.com/common-nighthawk/go-figure) - beautiful ASCII
+    * [Go-jira](https://github.com/andygrunwald/go-jira) - client library for Atlassian Jira
 * ❤️
