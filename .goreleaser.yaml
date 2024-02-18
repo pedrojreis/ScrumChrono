@@ -16,9 +16,9 @@ builds:
         - windows
         - darwin
       ldflags:
-        - -s -w -X cmd.Version={{.Version}}
-        - -s -w -X cmd.Commit={{.ShortCommit}}
-        - -s -w -X cmd.Date={{.CommitDate}}
+        - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Version={{.Version}}
+        - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Commit={{.ShortCommit}}
+        - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Date={{.CommitDate}}
 
 archives:
   - format: tar.gz
