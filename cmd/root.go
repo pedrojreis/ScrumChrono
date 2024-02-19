@@ -153,6 +153,9 @@ func startCountdown() {
 				case int(timers[currentPerson]/time.Second) < (maxTime * 2 / 3):
 					countdown.TextStyle = termui.NewStyle(termui.ColorYellow)
 					countdown.BorderStyle = termui.NewStyle(termui.ColorYellow)
+				case int(timers[currentPerson]/time.Second) < (maxTime):
+					countdown.TextStyle = termui.NewStyle(termui.Color(202))
+					countdown.BorderStyle = termui.NewStyle(termui.Color(202))
 				default:
 					countdown.TextStyle = termui.NewStyle(termui.ColorRed)
 					countdown.BorderStyle = termui.NewStyle(termui.ColorRed)
