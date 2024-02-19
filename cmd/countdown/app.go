@@ -14,6 +14,50 @@ import (
 	"github.com/spf13/viper"
 )
 
+type App struct {
+	users         []string
+	userList      *widgets.List
+	countdownText *widgets.Paragraph
+	ticketsList   *widgets.List
+	uiGrid        *termui.Grid
+}
+
+func (app *App) UpdateGrid() {
+	app.uiGrid = termui.NewGrid()
+	termWidth, termHeight := termui.TerminalDimensions()
+	app.uiGrid.SetRect(0, 0, termWidth, termHeight)
+
+	if termWidth > 100 {
+		//Countdown UI
+		app.countdownText.PaddingLeft = int(termWidth*2.0/3.0/2.0) - (len(strings.Split(app.countdownText.Text, "\n")[0]) / 2.0) //width
+		app.countdownText.PaddingTop = int(termHeight*2.0/3.0/2.0 - (len(strings.Split(app.countdownText.Text, "\n")) / 2.0))    //height
+
+		//List UI
+		app.userList.PaddingLeft = int(termWidth*1.0/3.0/2.0) - (len(strings.Split(app.users[0], "\n")[0]) / 2.0) //width
+
+		//Set Grid
+		app.uiGrid.Set(
+			termui.NewCol(2.0/3.0, termui.NewRow(2.0/3.0, app.countdownText), termui.NewRow(1.0/3.0, app.ticketsList)),
+			termui.NewCol(1.0/3.0, termui.NewRow(1.0, app.userList)),
+		)
+	} else {
+		//Countdown UI
+		app.countdownText.PaddingLeft = int(termWidth/2) - (len(strings.Split(app.countdownText.Text, "\n")[0]) / 2.0) //width
+		app.countdownText.PaddingTop = int(termHeight/3/2) - 4                                                         //why 4? because the height of our text is 6, so we divide that by 2 and add 1 because of the title
+
+		//List UI
+		app.userList.PaddingLeft = int(termWidth/2) - (len(app.users[0]) / 2.0) //width
+
+		//Set Grid
+		app.uiGrid.Set(
+			termui.NewCol(1.0,
+				termui.NewRow(1.0/3.0, app.countdownText),
+				termui.NewRow(1.0/3.0, app.userList),
+				termui.NewRow(1.0/3.0, app.ticketsList),
+			))
+	}
+}
+
 // StartCountdown starts the countdown app.
 func StartCountdown(team string) {
 	if err := termui.Init(); err != nil {
@@ -52,45 +96,16 @@ func StartCountdown(team string) {
 
 	grid := termui.NewGrid()
 
-	updateGrid := func() {
-		grid = termui.NewGrid()
-		termWidth, termHeight := termui.TerminalDimensions()
-		grid.SetRect(0, 0, termWidth, termHeight)
-
-		if termWidth > 100 {
-			//Countdown UI
-			countdown.PaddingLeft = int(termWidth*2.0/3.0/2.0) - (len(strings.Split(countdown.Text, "\n")[0]) / 2.0) //width
-			countdown.PaddingTop = int(termHeight*2.0/3.0/2.0 - (len(strings.Split(countdown.Text, "\n")) / 2.0))    //height
-
-			//List UI
-			list.PaddingLeft = int(termWidth*1.0/3.0/2.0) - (len(strings.Split(names[0], "\n")[0]) / 2.0) //width
-
-			//Set Grid
-			grid.Set(
-				termui.NewCol(2.0/3.0, termui.NewRow(2.0/3.0, countdown), termui.NewRow(1.0/3.0, sprintInfo)),
-				termui.NewCol(1.0/3.0, termui.NewRow(1.0, list)),
-			)
-		} else {
-			//Countdown UI
-			countdown.PaddingLeft = int(termWidth/2) - (len(strings.Split(countdown.Text, "\n")[0]) / 2.0) //width
-			countdown.PaddingTop = int(termHeight/3/2) - 4                                                 //why 4? because the height of our text is 6, so we divide that by 2 and add 1 because of the title
-
-			//List UI
-			list.PaddingLeft = int(termWidth/2) - (len(names[0]) / 2.0) //width
-
-			//Set Grid
-			grid.Set(
-				termui.NewCol(1.0,
-					termui.NewRow(1.0/3.0, countdown),
-					termui.NewRow(1.0/3.0, list),
-					termui.NewRow(1.0/3.0, sprintInfo),
-				))
-		}
+	app := App{
+		users:         names,
+		userList:      list,
+		countdownText: countdown,
+		ticketsList:   sprintInfo,
+		uiGrid:        grid,
 	}
 
-	updateGrid()
-
-	termui.Render(grid)
+	app.UpdateGrid()
+	termui.Render(app.uiGrid)
 
 	events := termui.PollEvents()
 	quit := make(chan struct{})
@@ -128,7 +143,7 @@ func StartCountdown(team string) {
 				list.SelectedRowStyle = countdown.TextStyle
 
 				countdown.Text = figure.NewFigure(fmt.Sprintf("%02d:%02d", minutes, seconds), viper.GetString("Teams."+team+".Font"), true).String()
-				termui.Render(grid)
+				termui.Render(app.uiGrid)
 
 				if isPaused {
 					continue
@@ -175,8 +190,9 @@ func StartCountdown(team string) {
 			case "<Space>":
 				isPaused = !isPaused
 			case "<Resize>":
-				updateGrid()
-				termui.Render(grid)
+				//updateGrid()
+				app.UpdateGrid()
+				termui.Render(app.uiGrid)
 			}
 			for i, f := range focus {
 				if i == currentFocus {
