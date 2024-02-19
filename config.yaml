@@ -5,7 +5,7 @@ Jira:
 Teams:
   FirstTeamName:
     BoardID: 1
-    MaxTime: 180 # seconds
+    MaxTime: 20 # seconds
     Font: "doom" # http://www.figlet.org/fontdb.cgi
     Members:
       - "Zagreus"

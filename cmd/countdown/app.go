@@ -15,11 +15,13 @@ import (
 )
 
 type App struct {
-	users         []string
-	userList      *widgets.List
-	countdownText *widgets.Paragraph
-	ticketsList   *widgets.List
-	uiGrid        *termui.Grid
+	users             []string
+	userList          *widgets.List
+	userTimers        map[string]time.Duration
+	countdownText     *widgets.Paragraph
+	countdownIsPaused bool
+	ticketsList       *widgets.List
+	uiGrid            *termui.Grid
 }
 
 func (app *App) UpdateGrid() {
@@ -58,7 +60,8 @@ func (app *App) UpdateGrid() {
 	}
 }
 
-// StartCountdown starts the countdown app.
+// StartCountdown starts the countdown app, by creating the app UI
+// and both the timer and keyboard events threads
 func StartCountdown(team string) {
 	if err := termui.Init(); err != nil {
 		fmt.Printf("Failed to initialize termui: %v\n", err)
@@ -70,39 +73,32 @@ func StartCountdown(team string) {
 	stringTitle := make(chan string)
 	go jira.GetIssuesForSprint(team, stringTitle)
 
-	// Init our List with names
 	names := core.RandomizeOrder(viper.GetStringSlice("Teams." + team + ".Members"))
-	list := widgets.NewList()
-	list.Title = "[ " + strings.ToUpper(team) + " ]"
-	list.Rows = names
-	list.TextStyle = termui.NewStyle(termui.ColorWhite)
-
-	// Init our Countdown
-	countdown := widgets.NewParagraph()
-	countdown.Text = figure.NewFigure("00:00", viper.GetString("Teams."+team+".Font"), true).String()
-	countdown.TextStyle = termui.NewStyle(termui.ColorBlue)
-	countdown.Title = "[ Countdown ]"
-
-	// Init our sprintInfo
-	sprintInfo := widgets.NewList()
-	sprintInfo.Title = "[ " + <-stringTitle + " ]"
-	sprintInfo.Rows = jira.GetIssuesForSprintByUser(list.Rows[list.SelectedRow])
-	sprintInfo.SelectedRowStyle = termui.NewStyle(termui.ColorGreen)
-	sprintInfo.WrapText = false
-
-	//focusable stuff
-	focus := []*widgets.List{list, sprintInfo}
-	currentFocus := 0
-
-	grid := termui.NewGrid()
-
 	app := App{
 		users:         names,
-		userList:      list,
-		countdownText: countdown,
-		ticketsList:   sprintInfo,
-		uiGrid:        grid,
+		userList:      widgets.NewList(),
+		countdownText: widgets.NewParagraph(),
+		ticketsList:   widgets.NewList(),
+		uiGrid:        termui.NewGrid(),
 	}
+	app.userTimers = make(map[string]time.Duration)
+	app.countdownIsPaused = true
+
+	// Init our List with names
+	app.userList.Title = "[ " + strings.ToUpper(team) + " ]"
+	app.userList.Rows = names
+	app.userList.TextStyle = termui.NewStyle(termui.ColorWhite)
+
+	// Init our Countdown
+	app.countdownText.Text = figure.NewFigure("00:00", viper.GetString("Teams."+team+".Font"), true).String()
+	app.countdownText.TextStyle = termui.NewStyle(termui.ColorBlue)
+	app.countdownText.Title = "[ Countdown ]"
+
+	// Init our sprintInfo
+	app.ticketsList.Title = "[ " + <-stringTitle + " ]"
+	app.ticketsList.Rows = jira.GetIssuesForSprintByUser(app.userList.Rows[app.userList.SelectedRow])
+	app.ticketsList.SelectedRowStyle = termui.NewStyle(termui.ColorGreen)
+	app.ticketsList.WrapText = false
 
 	app.UpdateGrid()
 	termui.Render(app.uiGrid)
@@ -110,99 +106,11 @@ func StartCountdown(team string) {
 	events := termui.PollEvents()
 	quit := make(chan struct{})
 
-	timers := make(map[string]time.Duration)
-	isPaused := true
+	// start internal Timer
+	go app.InternalTimer(team, quit)
 
-	go func() {
-		ticker := time.NewTicker(100 * time.Millisecond)
-		for {
-			select {
-			case <-ticker.C:
-				currentPerson := list.Rows[list.SelectedRow]
-				minutes := int(timers[currentPerson] / time.Minute)
-				seconds := int((timers[currentPerson] % time.Minute) / time.Second)
-				maxTime := viper.GetInt("Teams." + team + ".MaxTime")
-				switch {
-				case isPaused:
-					countdown.TextStyle = termui.NewStyle(termui.Color(8))
-					countdown.BorderStyle = termui.NewStyle(termui.Color(8))
-				case int(timers[currentPerson]/time.Second) < (maxTime / 3):
-					countdown.TextStyle = termui.NewStyle(termui.ColorGreen)
-					countdown.BorderStyle = termui.NewStyle(termui.ColorGreen)
-				case int(timers[currentPerson]/time.Second) < (maxTime * 2 / 3):
-					countdown.TextStyle = termui.NewStyle(termui.ColorYellow)
-					countdown.BorderStyle = termui.NewStyle(termui.ColorYellow)
-				case int(timers[currentPerson]/time.Second) < (maxTime):
-					countdown.TextStyle = termui.NewStyle(termui.Color(202))
-					countdown.BorderStyle = termui.NewStyle(termui.Color(202))
-				default:
-					countdown.TextStyle = termui.NewStyle(termui.ColorRed)
-					countdown.BorderStyle = termui.NewStyle(termui.ColorRed)
-				}
-
-				list.SelectedRowStyle = countdown.TextStyle
-
-				countdown.Text = figure.NewFigure(fmt.Sprintf("%02d:%02d", minutes, seconds), viper.GetString("Teams."+team+".Font"), true).String()
-				termui.Render(app.uiGrid)
-
-				if isPaused {
-					continue
-				}
-
-				timers[currentPerson] += time.Millisecond * 100
-			case <-quit:
-				ticker.Stop()
-				return
-			}
-		}
-	}()
-
-	go func() {
-		for {
-			e := <-events
-			switch e.ID {
-			case "q", "<C-c>":
-				termui.Close()
-				quit <- struct{}{}
-				return
-			case "<Left>":
-				currentFocus = (currentFocus + 1) % len(focus)
-			case "<Right>":
-				currentFocus = (currentFocus - 1 + len(focus)) % len(focus)
-			case "<Up>":
-				if len(focus[currentFocus].Rows) > 0 && focus[currentFocus].SelectedRow == 0 {
-					focus[currentFocus].SelectedRow = len(focus[currentFocus].Rows) - 1
-				} else {
-					focus[currentFocus].ScrollUp()
-				}
-
-				sprintInfo.Rows = jira.GetIssuesForSprintByUser(list.Rows[list.SelectedRow])
-			case "<Down>":
-				if len(focus[currentFocus].Rows) > 0 {
-					if focus[currentFocus].SelectedRow == len(focus[currentFocus].Rows)-1 {
-						focus[currentFocus].SelectedRow = 0
-					} else {
-						focus[currentFocus].ScrollDown()
-					}
-				}
-
-				sprintInfo.Rows = jira.GetIssuesForSprintByUser(list.Rows[list.SelectedRow])
-			case "<Space>":
-				isPaused = !isPaused
-			case "<Resize>":
-				//updateGrid()
-				app.UpdateGrid()
-				termui.Render(app.uiGrid)
-			}
-			for i, f := range focus {
-				if i == currentFocus {
-					f.TitleStyle = termui.NewStyle(termui.Color(termui.ModifierBold))
-				} else {
-					f.TitleStyle = termui.NewStyle(termui.ColorWhite)
-				}
-			}
-		}
-	}()
+	// start keyboard handler
+	go app.KeyboardHandler(events, quit)
 
 	<-quit
 }
