@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/pedrojreis/ScrumChrono/cmd/countdown"
+	"github.com/pedrojreis/ScrumChrono/core/countdown"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
