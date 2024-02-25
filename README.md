@@ -5,6 +5,7 @@
 # ScrumChrono
 
   • <a href="#about">About</a> •
+  <a href="#installation">Installation</a> •
   <a href="#features">Features</a> •
   <a href="#built-with">Built With</a> •
 </div>
@@ -16,7 +17,17 @@
 ScrumChrono is a terminal UI to aid Scrum meetings. The goal of this project is to make easy to track time and provide some extra information.
 Feel free to open an issue with any bug you encounter of any suggestion.
 
-As of now this is available to install via [brew](https://github.com/pedrojreis/homebrew-ScrumChrono).
+## Installation
+
+Via [Homebrew](https://brew.sh)
+```
+brew install pedrojreis/tap/scrumchrono
+```
+
+Via [Winget](https//github.com/microsoft/winget-cli)
+```
+winget install ScrumChrono
+```
 
 ## Features
 
