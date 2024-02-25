@@ -6,6 +6,7 @@
 
   • <a href="#about">About</a> •
   <a href="#installation">Installation</a> •
+  <a href="#usage">Usages</a> •
   <a href="#features">Features</a> •
   <a href="#built-with">Built With</a> •
 </div>
@@ -27,6 +28,19 @@ brew install pedrojreis/tap/scrumchrono
 Via [Winget](https//github.com/microsoft/winget-cli)
 ```
 winget install ScrumChrono
+```
+
+## Usage
+
+```shell
+# Current version
+ScrumChrono version
+
+# View Config - it will include path and content
+ScrumChrono config view
+
+# Run for firstteamname
+ScrumChrono -t firstteamname
 ```
 
 ## Features
