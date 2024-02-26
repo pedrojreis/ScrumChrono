@@ -22,11 +22,16 @@ func GetIssuesForSprint(team string, out chan<- string) {
 
 	url := viper.GetString("Jira.url")
 
-	jiraClient, _ := jira.NewClient(tp.Client(), url)
+	jiraClient, err := jira.NewClient(tp.Client(), url)
 
-	sprintlist, _, _ := jiraClient.Board.GetAllSprintsWithOptions(viper.GetInt("Teams."+team+".BoardID"), &jira.GetAllSprintsOptions{State: "active"})
+	if err != nil {
+		out <- "No active sprint detected"
+		return
+	}
 
-	if sprintlist.Values == nil {
+	sprintlist, _, err := jiraClient.Board.GetAllSprintsWithOptions(viper.GetInt("Teams."+team+".BoardID"), &jira.GetAllSprintsOptions{State: "active"})
+
+	if sprintlist.Values == nil || err != nil {
 		out <- "No active sprint detected"
 		return
 	}
