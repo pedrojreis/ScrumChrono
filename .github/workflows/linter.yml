@@ -1,4 +1,4 @@
-name: golangci-lint 🕵️‍♂️
+name: 🕵️‍♂️ golangci-lint
 on:
   pull_request:
     types: [opened, synchronize, reopened]
