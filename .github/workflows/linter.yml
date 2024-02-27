@@ -1,4 +1,4 @@
-name: 🕵️‍♂️ golangci-lint
+name: Lint & Test 🕵️‍♂️
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -22,7 +22,7 @@ jobs:
       - name: Install Go 🐹
         uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.21"
+          go-version: "1.22"
           cache: false
 
       - name: golangci-lint 🕵️‍♂️
@@ -40,7 +40,7 @@ jobs:
       - name: Install Go 🐹
         uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.23"
+          go-version: "1.22"
           cache: false
 
       - name: Install gocover-cobertura 📦
