@@ -1,8 +1,13 @@
 package core
 
 import (
+	"errors"
+	"fmt"
 	"math/rand"
+	"os"
 	"time"
+
+	"github.com/cqroot/prompt"
 )
 
 // randomizeOrder randomizes the order of elements in the given slice of names.
@@ -15,4 +20,15 @@ func RandomizeOrder(names []string) []string {
 		names[i], names[j] = names[j], names[i]
 	})
 	return names
+}
+
+func CheckErr(err error) {
+	if err != nil {
+		if errors.Is(err, prompt.ErrUserQuit) {
+			fmt.Fprintln(os.Stderr, "Error:", err)
+			os.Exit(1)
+		} else {
+			panic(err)
+		}
+	}
 }
