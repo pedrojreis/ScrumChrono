@@ -13,6 +13,9 @@
 
 ---
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/pedrojreis/ScrumChrono)](https://goreportcard.com/report/github.com/pedrojreis/ScrumChrono) ![Golang Linter](https://github.com/pedrojreis/Scrumchrono/actions/workflows/linter.yml/badge.svg)
+---
+
 ## About
 
 ScrumChrono is a terminal UI to aid Scrum meetings. The goal of this project is to make easy to track time and provide some extra information.
