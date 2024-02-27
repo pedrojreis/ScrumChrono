@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/mail"
+	"strconv"
 	"strings"
 
 	"github.com/pedrojreis/ScrumChrono/core"
@@ -38,10 +39,11 @@ func configCmd() *cobra.Command {
 			initConfig()
 			configFile := viper.ConfigFileUsed()
 			d := color.New(color.FgHiBlue)
-			if configFile != "" {
+			if configFile != "" && viper.IsSet("teams") {
 				d.Printf("Configuration file is located at: %s\n", configFile)
 			} else {
-				d.Println("I'll generate a new configuration file for you at $HOME/.scrumchrono.yaml.")
+				d.Println("Can't detect any configuration file at $HOME/.scrumchrono.yaml or the configuration is empty. Please run the wizard to create one.")
+				return
 			}
 
 			config := viper.AllSettings()
@@ -60,7 +62,6 @@ func configCmd() *cobra.Command {
 		Use:   "wizard",
 		Short: "Run the configuration wizard",
 		Run: func(cmd *cobra.Command, args []string) {
-			//todo This adds an extra team :()
 			initConfig()
 			runWizard()
 		},
@@ -110,33 +111,15 @@ func initConfig() {
 	viper.AddConfigPath("$HOME/")                // optionally look for config in the working directory
 	if err := viper.ReadInConfig(); err != nil { // Handle errors reading the config file
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			setDefaults()
 			err := viper.SafeWriteConfig()
 			if err != nil {
-				log.Fatalf("Fatal error config file: %s \n", err)
+				log.Fatalf("Can't detect any configuration file at $HOME/.scrumchrono.yaml. Please run the wizard to create one.")
 			}
 		} else {
 			// Config file was found but another error was produced
 			panic(fmt.Errorf("Fatal error config file: %s", err))
 		}
 	}
-}
-
-// setDefaults sets the default values for the configuration settings.
-// It initializes the default values for Jira URL, username, and token,
-// as well as the default values for team-specific settings such as
-// board ID, maximum time, font, and members.
-func setDefaults() {
-	// Jira Defaults
-	viper.SetDefault("Jira.url", "https://my-company.atlassian.net/")
-	viper.SetDefault("Jira.username", "username")
-	viper.SetDefault("Jira.token", "token")
-
-	// Team Defaults
-	viper.SetDefault("Teams.TeamName.BoardID", "1")
-	viper.SetDefault("Teams.TeamName.MaxTime", "180")
-	viper.SetDefault("Teams.TeamName.Font", "doom")
-	viper.SetDefault("Teams.TeamName.Members", []string{"Zagreus", "Link", "Arthur", "GLaDOS"})
 }
 
 // runWizard is a function that runs a configuration wizard to set up Jira settings and optionally add a team.
@@ -166,7 +149,7 @@ func runWizard() {
 		}
 
 		// 2. Team settings
-		teamWizard()
+		teamWizard(i)
 	}
 }
 
@@ -186,6 +169,7 @@ func jiraWizard() {
 	viper.Set("Jira.url", jiraUrl)
 	viper.Set("Jira.username", jiraUsername)
 	viper.Set("Jira.token", jiraToken)
+
 	err = viper.WriteConfig()
 
 	if err != nil {
@@ -193,9 +177,9 @@ func jiraWizard() {
 	}
 }
 
-func teamWizard() {
+func teamWizard(i int) {
 	// 2. Team settings
-	teamName, err := prompt.New().Ask("Team Name:").Input("TeamName")
+	teamName, err := prompt.New().Ask("Team Name:").Input("TeamName#" + strconv.Itoa(i+1))
 	core.CheckErr(err)
 
 	teamBoardID, err := prompt.New().Ask("Board ID:").Input("1")
@@ -220,6 +204,7 @@ func teamWizard() {
 	}
 
 	viper.Set("Teams."+teamName+".Members", teamMembersSplit)
+
 	err = viper.WriteConfig()
 
 	if err != nil {
