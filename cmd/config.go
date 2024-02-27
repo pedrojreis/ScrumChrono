@@ -65,7 +65,6 @@ func configCmd() *cobra.Command {
 		},
 	}
 
-	// todo : need to fix this. It's not deleting -.-
 	deleteCmd := &cobra.Command{
 		Use:   "delete",
 		Short: "Delete team from configuration",
@@ -76,8 +75,13 @@ func configCmd() *cobra.Command {
 			core.CheckErr(err)
 
 			configMap := viper.AllSettings()
-			delete(configMap, "Teams"+teamName)
-			encodedConfig, _ := yaml.Marshal(configMap)
+			delete(configMap["teams"].(map[string]interface{}), teamName)
+			encodedConfig, err := yaml.Marshal(&configMap)
+
+			if err != nil {
+				log.Fatalf("Failed to marshal config to YAML: %v", err)
+			}
+
 			if err = viper.ReadConfig(bytes.NewReader(encodedConfig)); err != nil {
 				log.Fatalf("Failed to delete team from configuration: %v", err)
 			}
@@ -100,12 +104,12 @@ func configCmd() *cobra.Command {
 // and reads the config file into the viper configuration object.
 // If there is an error reading the config file, it logs a fatal error.
 func initConfig() {
-	viper.SetConfigName(".scrumchrono") // name of config file (without extension)
-	viper.SetConfigType("yaml")         // REQUIRED if the config file does not have the extension in the name
-	viper.AddConfigPath("$HOME/")       // optionally look for config in the working directory
-	setDefaults()
+	viper.SetConfigName(".scrumchrono")          // name of config file (without extension)
+	viper.SetConfigType("yaml")                  // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath("$HOME/")                // optionally look for config in the working directory
 	if err := viper.ReadInConfig(); err != nil { // Handle errors reading the config file
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			setDefaults()
 			err := viper.SafeWriteConfig()
 			if err != nil {
 				log.Fatalf("Fatal error config file: %s \n", err)
@@ -154,7 +158,6 @@ func runWizard() {
 	}
 
 	// 2. Team settings
-
 	teamWizard()
 }
 
