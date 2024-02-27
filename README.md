@@ -36,12 +36,20 @@ winget install ScrumChrono
 # Current version
 ScrumChrono version
 
+# Starts a wizard to init the configuration
+ScrumChrono config wizard
+
 # View Config - it will include path and content
 ScrumChrono config view
+
+# Allows the user to delete a team in his configuration
+ScrumChrono config delete
 
 # Run for firstteamname
 ScrumChrono -t firstteamname
 ```
+
+Please refer to the [wiki](https://github.com/pedrojreis/ScrumChrono/wiki) for more information and how-to's
 
 ## Features
 
