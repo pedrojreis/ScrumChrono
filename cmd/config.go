@@ -82,7 +82,11 @@ func configCmd() *cobra.Command {
 				log.Fatalf("Failed to delete team from configuration: %v", err)
 			}
 
-			viper.WriteConfig()
+			err = viper.WriteConfig()
+
+			if err != nil {
+				log.Fatalf("Failed to write configuration file: %v", err)
+			}
 		},
 	}
 
@@ -170,7 +174,11 @@ func jiraWizard() {
 	viper.Set("Jira.url", jiraUrl)
 	viper.Set("Jira.username", jiraUsername)
 	viper.Set("Jira.token", jiraToken)
-	viper.WriteConfig()
+	err = viper.WriteConfig()
+
+	if err != nil {
+		log.Fatalf("Failed to write configuration file: %v", err)
+	}
 }
 
 func teamWizard() {
@@ -200,7 +208,11 @@ func teamWizard() {
 	}
 
 	viper.Set("Teams."+teamName+".Members", teamMembersSplit)
-	viper.WriteConfig()
+	err = viper.WriteConfig()
+
+	if err != nil {
+		log.Fatalf("Failed to write configuration file: %v", err)
+	}
 }
 
 // validateEmail validates the given email address.
