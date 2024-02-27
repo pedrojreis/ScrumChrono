@@ -60,6 +60,7 @@ func configCmd() *cobra.Command {
 		Use:   "wizard",
 		Short: "Run the configuration wizard",
 		Run: func(cmd *cobra.Command, args []string) {
+			//todo This adds an extra team :()
 			initConfig()
 			runWizard()
 		},
@@ -143,22 +144,30 @@ func runWizard() {
 	// 1. Jira settings
 	jiraWizard()
 
-	// Ask if we want to add a team
-	continueWizard, err := prompt.New().Ask("Do you want to add a team?").
-		Choose(
-			[]string{"Yes", "No"},
-			choose.WithDefaultIndex(0),
-			choose.WithHelp(true),
-		)
+	for i := 0; ; i++ {
+		// Ask if we want to add a team
+		promptText := "Do you want to add a team?"
 
-	core.CheckErr(err)
+		if i >= 1 {
+			promptText = "Do you want to add another team?"
+		}
 
-	if continueWizard == "No" {
-		return
+		continueWizard, err := prompt.New().Ask(promptText).
+			Choose(
+				[]string{"Yes", "No"},
+				choose.WithDefaultIndex(0),
+				choose.WithHelp(true),
+			)
+
+		core.CheckErr(err)
+
+		if continueWizard == "No" {
+			return
+		}
+
+		// 2. Team settings
+		teamWizard()
 	}
-
-	// 2. Team settings
-	teamWizard()
 }
 
 // jiraWizard is a function that prompts the user to enter Jira configuration details such as the Jira URL, username, and token.
