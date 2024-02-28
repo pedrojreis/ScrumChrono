@@ -1,4 +1,4 @@
-name: 🕵️‍♂️ golangci-lint
+name: Lint & Test 🕵️‍♂️
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -10,6 +10,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   golangci:
@@ -22,13 +23,73 @@ jobs:
       - name: Install Go 🐹
         uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.21"
+          go-version: "1.22"
           cache: false
 
       - name: golangci-lint 🕵️‍♂️
         uses: golangci/golangci-lint-action@3cfe3a4abbb849e10058ce4af15d205b6da42804 # v4.0.0
         with:
-          # Require: The version of golangci-lint to use.
-          # When `install-mode` is `binary` (default) the value can be v1.2 or v1.2.3 or `latest` to use the latest version.
-          # When `install-mode` is `goinstall` the value can be v1.2.3, `latest`, or the hash of a commit.
           version: v1.54
+
+  unittest:
+    name: Unit Test 🧪
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Install Go 🐹
+        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
+        with:
+          go-version: "1.22"
+          cache: false
+
+      - name: Install gocover-cobertura 📦
+        run: |
+          go get github.com/boumenot/gocover-cobertura && go install github.com/boumenot/gocover-cobertura
+
+      - name: Set up gotestfmt 📦
+        uses: GoTestTools/gotestfmt-action@8b4478c7019be847373babde9300210e7de34bfb # v2.2.0
+
+      - name: Run tests 🧪
+        run: sudo go test -race -json -v -coverprofile=coverage.txt ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
+
+      - name: Convert go coverage to corbetura format 🔄
+        run: gocover-cobertura < coverage.txt > coverage.xml
+
+      - name: Upload coverage reports to Codecov ☂️
+        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4.1.0
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          slug: pedrojreis/ScrumChrono
+        with:
+          files: ./coverage.xml
+
+      - name: Generate code coverage report 📊
+        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
+        with:
+          filename: coverage.xml
+          badge: false
+          fail_below_min: false
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: "60 80"
+
+      - name: Add Coverage PR Comment 📌
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
+
+      # Upload the original go test log as an artifact for later review.
+      - name: Upload test log 📤
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        if: always()
+        with:
+          name: test-log
+          path: /tmp/gotest.log
+          if-no-files-found: error
