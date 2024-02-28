@@ -10,15 +10,15 @@ env:
   - CGO_ENABLED=0
 
 builds:
-   -  main: ./main.go
-      goos:
-        - linux
-        - windows
-        - darwin
-      ldflags:
-        - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Version={{.Version}}
-        - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Commit={{.ShortCommit}}
-        - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Date={{.CommitDate}}
+  - main: ./main.go
+    goos:
+      - linux
+      - windows
+      - darwin
+    ldflags:
+      - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Version={{.Version}}
+      - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Commit={{.ShortCommit}}
+      - -s -w -X github.com/pedrojreis/ScrumChrono/cmd.Date={{.CommitDate}}
 
 archives:
   - format: tar.gz
@@ -40,7 +40,16 @@ archives:
 
 signs:
   - artifacts: checksum
-    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
+    args:
+      [
+        "--batch",
+        "-u",
+        "{{ .Env.GPG_FINGERPRINT }}",
+        "--output",
+        "${signature}",
+        "--detach-sign",
+        "${artifact}",
+      ]
 
 changelog:
   sort: asc
@@ -51,8 +60,8 @@ changelog:
 
 brews:
   - repository:
-        owner: pedrojreis
-        name: homebrew-tap
+      owner: pedrojreis
+      name: homebrew-tap
     name: ScrumChrono
     folder: Formula
     homepage: https://github.com/pedrojreis/ScrumChrono
@@ -80,6 +89,22 @@ winget:
     tags:
       - Scrum
       - Terminal
+
+scoops:
+  - name: ScrumChrono
+    description: ScrumChrono is a terminal UI to aid Scrum meetings.
+    homepage: https://github.com/pedrojreis/ScrumChrono
+    license: Apache-2.0
+    repository:
+      owner: pedrojreis
+      name: ScrumChrono
+      pull_request:
+        enabled: false
+        draft: true
+        base:
+          owner: ScoopInstaller
+          name: Extras
+          branch: master
 
 snapshot:
   name_template: "{{ .Tag }}-next"
