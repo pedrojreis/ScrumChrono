@@ -106,7 +106,8 @@ scoops:
       email: kaphwor@sapo.pt
     repository:
       owner: pedrojreis
-      name: ScrumChrono
+      name: Extras
+      branch: "scrumchrono-{{.Version}}"
       pull_request:
         enabled: false
         draft: true
