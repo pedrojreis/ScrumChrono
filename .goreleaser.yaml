@@ -59,13 +59,16 @@ changelog:
       - "^test:"
 
 brews:
-  - repository:
-      owner: pedrojreis
-      name: homebrew-tap
-    name: ScrumChrono
+  - name: ScrumChrono
     folder: Formula
     homepage: https://github.com/pedrojreis/ScrumChrono
     description: ScrumChrono is a terminal UI to aid Scrum meetings.
+    commit_author:
+      name: Pedro Reis
+      email: kaphwor@sapo.pt
+    repository:
+      owner: pedrojreis
+      name: homebrew-tap
     test: |
       system "ScrumChrono --version"
 
@@ -75,6 +78,9 @@ winget:
     short_description: ScrumChrono is a terminal UI to aid Scrum meetings.
     license: Apache-2.0
     homepage: https://github.com/pedrojreis/ScrumChrono
+    commit_author:
+      name: Pedro Reis
+      email: kaphwor@sapo.pt
     repository:
       owner: pedrojreis
       name: winget-pkgs
@@ -95,6 +101,9 @@ scoops:
     description: ScrumChrono is a terminal UI to aid Scrum meetings.
     homepage: https://github.com/pedrojreis/ScrumChrono
     license: Apache-2.0
+    commit_author:
+      name: Pedro Reis
+      email: kaphwor@sapo.pt
     repository:
       owner: pedrojreis
       name: ScrumChrono
