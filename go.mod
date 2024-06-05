@@ -6,7 +6,7 @@ require (
 	github.com/andygrunwald/go-jira v1.16.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
 	github.com/cqroot/prompt v0.9.3
-	github.com/fatih/color v1.16.0
+	github.com/fatih/color v1.17.0
 	github.com/gizak/termui/v3 v3.1.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.19.0
