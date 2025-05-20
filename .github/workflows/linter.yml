@@ -58,7 +58,7 @@ jobs:
         run: gocover-cobertura < coverage.txt > coverage.xml
 
       - name: Upload coverage reports to Codecov ☂️
-        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           slug: pedrojreis/ScrumChrono
@@ -87,7 +87,7 @@ jobs:
 
       # Upload the original go test log as an artifact for later review.
       - name: Upload test log 📤
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         if: always()
         with:
           name: test-log
