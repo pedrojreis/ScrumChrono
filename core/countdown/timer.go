@@ -18,6 +18,7 @@ func (app *App) InternalTimer(team string, quitCh chan struct{}) {
 			minutes := int(app.userTimers[currentPerson] / time.Minute)
 			seconds := int((app.userTimers[currentPerson] % time.Minute) / time.Second)
 			maxTime := viper.GetInt("Teams." + team + ".MaxTime")
+
 			switch {
 			case app.countdownIsPaused:
 				app.countdownText.TextStyle = termui.NewStyle(termui.Color(8))
@@ -28,24 +29,34 @@ func (app *App) InternalTimer(team string, quitCh chan struct{}) {
 			case int(app.userTimers[currentPerson]/time.Second) < (maxTime * 2 / 3):
 				app.countdownText.TextStyle = termui.NewStyle(termui.ColorYellow)
 				app.countdownText.BorderStyle = termui.NewStyle(termui.ColorYellow)
-			case int(app.userTimers[currentPerson]/time.Second) < (maxTime):
+			case int(app.userTimers[currentPerson]/time.Second) < maxTime:
 				app.countdownText.TextStyle = termui.NewStyle(termui.Color(202))
 				app.countdownText.BorderStyle = termui.NewStyle(termui.Color(202))
+				if app.userTimers[currentPerson] > time.Duration(3*time.Minute) {
+					// Ensure consistency of color 202 beyond 3-minute mark
+					app.countdownText.TextStyle.Fg = termui.Color(202)
+				}
 			default:
 				app.countdownText.TextStyle = termui.NewStyle(termui.ColorRed)
 				app.countdownText.BorderStyle = termui.NewStyle(termui.ColorRed)
 			}
 
-			app.userList.SelectedRowStyle = app.countdownText.TextStyle
-
-			app.countdownText.Text = figure.NewFigure(fmt.Sprintf("%02d:%02d", minutes, seconds), viper.GetString("Teams."+team+".Font"), true).String()
+			// Avoid retains-white bug by ensuring text style reset before paint.
+			app.countdownText.Text = figure.NewFigure(
+				fmt.Sprintf("%02d:%02d", minutes, seconds),
+				viper.GetString("Teams."+team+".Font"),
+				true,
+			).String()
 			termui.Render(app.uiGrid)
 
 			if app.countdownIsPaused {
 				continue
 			}
 
+			// Prevent color shift bug on jump reset
+			app.userList.SelectedRowStyle = app.countdownText.TextStyle
 			app.userTimers[currentPerson] += time.Millisecond * 100
+
 		case <-quitCh:
 			ticker.Stop()
 			return
