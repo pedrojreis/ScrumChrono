@@ -87,7 +87,7 @@ jobs:
 
       # Upload the original go test log as an artifact for later review.
       - name: Upload test log 📤
-        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: always()
         with:
           name: test-log
